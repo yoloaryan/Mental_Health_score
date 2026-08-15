@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>MindPulse — Mental Health Score Predictor</title>
+<script>
+  (function() {
+    const saved = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = saved || (prefersDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    if (meta) meta.content = theme;
+  })();
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient liquid gradient background -->
+  <div class="liquid-bg" aria-hidden="true">
+    <svg class="blob blob--a" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <path fill="url(#gradA)" d="M421,313Q407,376,353,412Q299,448,239,427Q179,406,131,362Q83,318,88,251Q93,184,146,142Q199,100,266,92Q333,84,378,132Q423,180,428,246Q433,312,421,313Z"/>
+      <defs>
+        <linearGradient id="gradA" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#7C6CFF"/>
+          <stop offset="100%" stop-color="#4FACFE"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <svg class="blob blob--b" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <path fill="url(#gradB)" d="M438,300Q423,366,367,404Q311,442,247,428Q183,414,140,367Q97,320,104,255Q111,190,161,148Q211,106,275,101Q339,96,388,138Q437,180,441,240Q445,300,438,300Z"/>
+      <defs>
+        <linearGradient id="gradB" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#34D8C4"/>
+          <stop offset="100%" stop-color="#B792F8"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <svg class="blob blob--c" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <path fill="url(#gradC)" d="M410,290Q400,350,352,392Q304,434,244,420Q184,406,144,360Q104,314,112,252Q120,190,166,148Q212,106,272,104Q332,102,376,142Q420,182,415,236Q410,290,410,290Z"/>
+      <defs>
+        <linearGradient id="gradC" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FF9AD5"/>
+          <stop offset="100%" stop-color="#7C6CFF"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="page">
+
+    <!-- Hero / intro column -->
+    <header class="hero">
+      <div class="hero__header-row">
+        <div class="hero__eyebrow">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          Digital Wellbeing Model
+        </div>
+
+        <!-- Apple-style Segmented Theme Control -->
+        <div class="theme-switch" role="radiogroup" aria-label="Appearance switch">
+          <button type="button" class="theme-switch__btn" id="themeLightBtn" data-theme-val="light" aria-label="Light mode" title="Switch to Light mode">
+            <svg class="theme-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <span>Light</span>
+          </button>
+          <button type="button" class="theme-switch__btn" id="themeDarkBtn" data-theme-val="dark" aria-label="Dark mode" title="Switch to Dark mode">
+            <svg class="theme-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span>Dark</span>
+          </button>
+          <div class="theme-switch__pill" aria-hidden="true"></div>
+        </div>
+      </div>
+      <h1 class="hero__title">Mind<span class="hero__title-accent">Pulse</span></h1>
+      <p class="hero__subtitle">
+        A glass-clear look at how your habits — screen time, sleep, study, and stress —
+        shape a single wellbeing signal. Fill in the form and watch the model think.
+      </p>
+
+      <ul class="hero__facts">
+        <li>
+          <span class="hero__facts-num">12</span>
+          <span class="hero__facts-label">signals analyzed</span>
+        </li>
+        <li>
+          <span class="hero__facts-num">&lt;1s</span>
+          <span class="hero__facts-label">prediction time</span>
+        </li>
+        <li>
+          <span class="hero__facts-num">0–10</span>
+          <span class="hero__facts-label">score scale</span>
+        </li>
+      </ul>
+
+      <p class="hero__disclaimer">
+        This tool reflects a statistical model trained on survey data. It is not a
+        clinical assessment or a diagnosis.
+      </p>
+    </header>
+
+    <!-- Form / result column -->
+    <main class="panel-wrap">
+
+      <!-- FORM CARD -->
+      <section class="glass-card" id="formCard" aria-labelledby="formTitle">
+        <div class="glass-card__header">
+          <h2 id="formTitle">Tell us about your day</h2>
+          <p>Every field feeds the model — accuracy in, clarity out.</p>
+        </div>
+
+        <form id="predictForm" novalidate>
+
+          <div class="field-grid">
+
+            <div class="field">
+              <label for="Age">Age</label>
+              <input type="number" id="Age" name="Age" min="10" max="100" placeholder="e.g. 21" required>
+              <span class="field__error" data-error-for="Age"></span>
+            </div>
+
+            <div class="field">
+              <label for="Gender">Gender</label>
+              <select id="Gender" name="Gender" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <span class="field__error" data-error-for="Gender"></span>
+            </div>
+
+            <div class="field">
+              <label for="Country">Country</label>
+              <input type="text" id="Country" name="Country" list="countryList" placeholder="e.g. India" required>
+              <datalist id="countryList">
+                <option value="India"></option>
+                <option value="USA"></option>
+                <option value="Canada"></option>
+                <option value="Australia"></option>
+                <option value="UK"></option>
+                <option value="Germany"></option>
+                <option value="Mexico"></option>
+                <option value="Turkey"></option>
+                <option value="France"></option>
+              </datalist>
+              <span class="field__error" data-error-for="Country"></span>
+            </div>
+
+            <div class="field">
+              <label for="Academic_Level">Academic level</label>
+              <select id="Academic_Level" name="Academic_Level" required>
+                <option value="" disabled selected>Select</option>
+                <option value="High School">High School</option>
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Graduate">Graduate</option>
+              </select>
+              <span class="field__error" data-error-for="Academic_Level"></span>
+            </div>
+
+            <div class="field">
+              <label for="Most_Used_Platform">Most used platform</label>
+              <select id="Most_Used_Platform" name="Most_Used_Platform" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Facebook">Facebook</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Snapchat">Snapchat</option>
+                <option value="Twitter">Twitter</option>
+                <option value="YouTube">YouTube</option>
+                <option value="TikTok">TikTok</option>
+                <option value="LINE">LINE</option>
+                <option value="KakaoTalk">KakaoTalk</option>
+                <option value="VKontakte">VKontakte</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="WeChat">WeChat</option>
+              </select>
+              <span class="field__error" data-error-for="Most_Used_Platform"></span>
+            </div>
+
+            <div class="field">
+              <label for="Purpose_Of_Use">Primary purpose</label>
+              <select id="Purpose_Of_Use" name="Purpose_Of_Use" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Networking">Networking</option>
+                <option value="Education">Education</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="News">News</option>
+              </select>
+              <span class="field__error" data-error-for="Purpose_Of_Use"></span>
+            </div>
+
+            <div class="field field--slider">
+              <label for="Avg_Daily_Usage_Hours">Avg. daily screen usage <span class="field__value" id="Avg_Daily_Usage_Hours_val">0h</span></label>
+              <input type="range" id="Avg_Daily_Usage_Hours" name="Avg_Daily_Usage_Hours" min="0" max="24" step="0.1" value="0" required>
+              <span class="field__error" data-error-for="Avg_Daily_Usage_Hours"></span>
+            </div>
+
+            <div class="field">
+              <label for="Daily_Unlocks">Daily phone unlocks</label>
+              <input type="number" id="Daily_Unlocks" name="Daily_Unlocks" min="0" placeholder="e.g. 45" required>
+              <span class="field__error" data-error-for="Daily_Unlocks"></span>
+            </div>
+
+            <div class="field field--slider">
+              <label for="Study_Hours">Study hours <span class="field__value" id="Study_Hours_val">0h</span></label>
+              <input type="range" id="Study_Hours" name="Study_Hours" min="0" max="24" step="0.1" value="0" required>
+              <span class="field__error" data-error-for="Study_Hours"></span>
+            </div>
+
+            <div class="field field--slider">
+              <label for="Physical_Activity_Hours">Physical activity <span class="field__value" id="Physical_Activity_Hours_val">0h</span></label>
+              <input type="range" id="Physical_Activity_Hours" name="Physical_Activity_Hours" min="0" max="24" step="0.1" value="0" required>
+              <span class="field__error" data-error-for="Physical_Activity_Hours"></span>
+            </div>
+
+            <div class="field field--slider">
+              <label for="Sleep_Hours_Per_Night">Sleep per night <span class="field__value" id="Sleep_Hours_Per_Night_val">0h</span></label>
+              <input type="range" id="Sleep_Hours_Per_Night" name="Sleep_Hours_Per_Night" min="0" max="24" step="0.1" value="0" required>
+              <span class="field__error" data-error-for="Sleep_Hours_Per_Night"></span>
+            </div>
+
+            <div class="field">
+              <label for="Stress_Level">Current stress level</label>
+              <select id="Stress_Level" name="Stress_Level" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Very High">Very High</option>
+              </select>
+              <span class="field__error" data-error-for="Stress_Level"></span>
+            </div>
+
+          </div>
+
+          <div class="form-footer">
+            <p class="api-status" id="apiStatus">
+              <span class="api-status__dot" id="apiStatusDot"></span>
+              <span id="apiStatusText">Checking API connection…</span>
+            </p>
+            <button type="submit" class="btn-predict" id="submitBtn">
+              <span class="btn-predict__label">Predict my score</span>
+              <span class="btn-predict__spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <p class="form-error" id="formError" role="alert"></p>
+        </form>
+      </section>
+
+      <!-- LOADING CARD -->
+      <section class="glass-card glass-card--loading is-hidden" id="loadingCard" aria-live="polite">
+        <div class="liquid-loader">
+          <svg viewBox="0 0 120 120" class="liquid-loader__ring">
+            <circle cx="60" cy="60" r="52" class="liquid-loader__track"/>
+            <circle cx="60" cy="60" r="52" class="liquid-loader__progress"/>
+          </svg>
+          <div class="liquid-loader__core"></div>
+        </div>
+        <h3>Reading the signals…</h3>
+        <p>Sending your data to the model and waiting on a prediction.</p>
+      </section>
+
+      <!-- RESULT CARD -->
+      <section class="glass-card glass-card--result is-hidden" id="resultCard" aria-live="polite">
+        <div class="result-gauge">
+          <svg viewBox="0 0 200 200" class="result-gauge__svg">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7C6CFF"/>
+                <stop offset="100%" stop-color="#34D8C4"/>
+              </linearGradient>
+              <clipPath id="gaugeClip">
+                <circle cx="100" cy="100" r="82"/>
+              </clipPath>
+            </defs>
+            <circle cx="100" cy="100" r="82" class="result-gauge__track"/>
+            <g clip-path="url(#gaugeClip)">
+              <path id="liquidFill" class="result-gauge__liquid" d=""/>
+              <path id="liquidWave" class="result-gauge__wave" d=""/>
+            </g>
+            <circle cx="100" cy="100" r="82" class="result-gauge__ring"/>
+          </svg>
+          <div class="result-gauge__center">
+            <span class="result-gauge__score" id="scoreValue">0.0</span>
+            <span class="result-gauge__max">/ 10</span>
+          </div>
+        </div>
+
+        <h3 id="resultLabel">Score</h3>
+        <p id="resultDescription" class="result-description"></p>
+
+        <button type="button" class="btn-secondary" id="resetBtn">Run another prediction</button>
+      </section>
+
+      <!-- ERROR CARD -->
+      <section class="glass-card glass-card--error is-hidden" id="errorCard" aria-live="assertive">
+        <div class="error-icon" aria-hidden="true">!</div>
+        <h3>Prediction failed</h3>
+        <p id="errorMessage">Something went wrong while contacting the API.</p>
+        <button type="button" class="btn-secondary" id="errorRetryBtn">Try again</button>
+      </section>
+
+    </main>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
