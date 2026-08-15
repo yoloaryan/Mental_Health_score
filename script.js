@@ -3,7 +3,9 @@
 // Talks to the existing FastAPI backend at http://127.0.0.1:2000
 // ===================================================================
 
-const API_BASE_URL = "http://127.0.0.1:2000";
+const API_BASE_URL = (window.location.protocol === "file:" || window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost")
+  ? "http://127.0.0.1:2000"
+  : window.location.origin;
 const PREDICT_ENDPOINT = `${API_BASE_URL}/predict`;
 
 // Assumed display range for the liquid gauge. The model itself does not

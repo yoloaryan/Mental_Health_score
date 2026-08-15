@@ -45,9 +45,19 @@ class PredictResponse(BaseModel):
     #6.77777777 -> float
 
 
+from fastapi.responses import FileResponse
+
 @app.get("/")
 def read_root():
-    return {"message": "Mental Health Model API is running"}
+    return FileResponse("index.html")
+
+@app.get("/style.css")
+def get_css():
+    return FileResponse("style.css")
+
+@app.get("/script.js")
+def get_js():
+    return FileResponse("script.js")
 
 
 @app.post('/predict',
